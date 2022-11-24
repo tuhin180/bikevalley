@@ -1,10 +1,75 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import toast from "react-hot-toast";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../components/Button/PrimaryButton";
+import SmallSpinner from "../../components/Spinner/SmallSpinner";
+import { AuthContext } from "../../Context/AuthProvider";
 
 const SignUp = () => {
+  const {
+    createUser,
+    updateUserProfile,
+    signInWithGoogle,
+    loading,
+    setLoading,
+  } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+  const loaction = useLocation();
+  const from = loaction.state?.from?.pathname || "/";
+
   const handleSignUp = (e) => {
-    e.prevenDefault();
+    e.preventDefault();
+    const name = e.target.name.value;
+    const image = e.target.image.files[0];
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    // console.log(name, image, email, password);
+
+    const formdata = new FormData();
+    formdata.append("image", image);
+
+    const url =
+      "https://api.imgbb.com/1/upload?key=1568f0326c8cd532f90b169095e80924";
+
+    fetch(url, {
+      method: "POST",
+      body: formdata,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // create user
+        createUser(email, password)
+          .then((result) => {
+            updateUserProfile(name, data.data.display_url)
+              .then(() => {
+                toast.success("user created succesfully");
+                navigate(from, { replace: true });
+              })
+              .catch((err) => {
+                toast.error(err.message);
+              });
+          })
+          .catch((err) => {
+            toast.success(err.message);
+          });
+      })
+      .catch((err) => {
+        toast.success(err.message);
+        setLoading(false);
+      });
+  };
+
+  //   sign in with google
+  const handleGoogleLogin = () => {
+    signInWithGoogle()
+      .then((result) => {
+        navigate(from, { replace: true });
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
   };
   return (
     <div>
@@ -83,7 +148,7 @@ const SignUp = () => {
                   type="submit"
                   classes="w-full px-8 py-3 font-semibold rounded-md bg-gray-900 hover:bg-gray-700 hover:text-white text-gray-100"
                 >
-                  Sign up
+                  {loading ? <SmallSpinner></SmallSpinner> : " Sign up"}
                 </PrimaryButton>
               </div>
             </div>
@@ -96,7 +161,11 @@ const SignUp = () => {
             <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
           </div>
           <div className="flex justify-center space-x-4">
-            <button aria-label="Log in with Google" className="p-3 rounded-sm">
+            <button
+              onClick={handleGoogleLogin}
+              aria-label="Log in with Google"
+              className="p-3 rounded-sm"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 32 32"

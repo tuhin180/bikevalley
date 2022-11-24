@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Context/AuthProvider";
 import PrimaryButton from "../Button/PrimaryButton";
 
 const Navbar = () => {
+  const { user, logout } = useContext(AuthContext);
   const navItem = (
     <React.Fragment>
       <li>
-        <Link>Home</Link>
+        <Link to="/">Home</Link>
       </li>
       <li>
-        <Link>Blog</Link>
+        <Link to="/blog">Blog</Link>
       </li>
     </React.Fragment>
   );
 
-  const handleLogOut = () => {};
+  const handleLogOut = () => {
+    logout();
+  };
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -48,10 +52,12 @@ const Navbar = () => {
         <ul className="menu menu-horizontal p-0">{navItem}</ul>
       </div>
       <div className="navbar-end">
-        <Link to="/login">
-          <button>Log In</button>
+        <Link className="mr-2" to="/login">
+          <PrimaryButton classes="py-2 px-3 rounded">Log in</PrimaryButton>
         </Link>
-        <Link onClick={handleLogOut}>logOut</Link>
+        <Link onClick={handleLogOut}>
+          <PrimaryButton classes="py-2 px-3 rounded">Log Out</PrimaryButton>
+        </Link>
       </div>
     </div>
   );
