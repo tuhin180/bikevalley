@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { setAuthToken } from "../../Api/auth";
 import PrimaryButton from "../../components/Button/PrimaryButton";
 import SmallSpinner from "../../components/Spinner/SmallSpinner";
 import { AuthContext } from "../../Context/AuthProvider";
@@ -18,6 +19,7 @@ const SignUp = () => {
   const loaction = useLocation();
   const from = loaction.state?.from?.pathname || "/";
 
+  //   signup system
   const handleSignUp = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -29,9 +31,8 @@ const SignUp = () => {
 
     const formdata = new FormData();
     formdata.append("image", image);
-
-    const url =
-      "https://api.imgbb.com/1/upload?key=1568f0326c8cd532f90b169095e80924";
+    const imghostkey = process.env.REACT_APP_IMGBB_KEY;
+    const url = `https://api.imgbb.com/1/upload?key=${imghostkey}`;
 
     fetch(url, {
       method: "POST",
@@ -42,6 +43,8 @@ const SignUp = () => {
         // create user
         createUser(email, password)
           .then((result) => {
+            // get toke
+            setAuthToken(result.user);
             updateUserProfile(name, data.data.display_url)
               .then(() => {
                 toast.success("user created succesfully");
@@ -65,6 +68,7 @@ const SignUp = () => {
   const handleGoogleLogin = () => {
     signInWithGoogle()
       .then((result) => {
+        setAuthToken(result.user);
         navigate(from, { replace: true });
       })
       .catch((err) => {

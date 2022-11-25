@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthProvider";
 import PrimaryButton from "../Button/PrimaryButton";
@@ -17,7 +18,11 @@ const Navbar = () => {
   );
 
   const handleLogOut = () => {
-    logout();
+    logout()
+      .then(() => {
+        toast.success("user loggedOut");
+      })
+      .catch((err) => toast.error(err.message));
   };
   return (
     <div className="navbar bg-base-100">
@@ -52,12 +57,19 @@ const Navbar = () => {
         <ul className="menu menu-horizontal p-0">{navItem}</ul>
       </div>
       <div className="navbar-end">
-        <Link className="mr-2" to="/login">
-          <PrimaryButton classes="py-2 px-3 rounded">Log in</PrimaryButton>
-        </Link>
-        <Link onClick={handleLogOut}>
-          <PrimaryButton classes="py-2 px-3 rounded">Log Out</PrimaryButton>
-        </Link>
+        {user?.uid ? (
+          <>
+            <Link onClick={handleLogOut}>
+              <PrimaryButton classes="py-2 px-3 rounded">Log Out</PrimaryButton>
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link className="mr-2" to="/login">
+              <PrimaryButton classes="py-2 px-3 rounded">Log in</PrimaryButton>
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

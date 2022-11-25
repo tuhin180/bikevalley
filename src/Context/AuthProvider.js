@@ -46,7 +46,7 @@ const AuthProvider = ({ children }) => {
   // 5. Logout
   const logout = () => {
     setLoading(true);
-    localStorage.removeItem("aircnc-token");
+    localStorage.removeItem("bikevalley-token");
     return signOut(auth);
   };
 
