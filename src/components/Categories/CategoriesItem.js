@@ -5,7 +5,10 @@ const CategoriesItem = ({ category }) => {
   const { _id, name, img, descripton } = category;
   return (
     <div>
-      <Link href="#" className="group block overflow-hidden shadow-md p-4">
+      <Link
+        to={`/category/${_id}`}
+        className="group block overflow-hidden shadow-md p-4"
+      >
         <img
           alt="Tee"
           src={img}

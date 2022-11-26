@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import Categorisedproducts from "../components/CategoriesProduct/Categorisedproducts";
 import Main from "../Layouts/Main";
 import ErrorPage from "../Pages/EroorPage/ErrorPage";
 import Blog from "../Pages/Home/Blog/Blog";
@@ -17,6 +18,12 @@ const routes = createBrowserRouter([
         element: <Home></Home>,
       },
       { path: "/blog", element: <Blog></Blog> },
+      {
+        path: "/category/:id",
+        loader: ({ params }) =>
+          fetch(`${process.env.REACT_APP_API_URL}/category/${params.id}`),
+        element: <Categorisedproducts></Categorisedproducts>,
+      },
       { path: "/login", element: <Login></Login> },
       { path: "/signup", element: <SignUp></SignUp> },
     ],
