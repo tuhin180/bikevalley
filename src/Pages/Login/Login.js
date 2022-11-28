@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { setAuthToken } from "../../Api/auth";
+
 import PrimaryButton from "../../components/Button/PrimaryButton";
 import SmallSpinner from "../../components/Spinner/SmallSpinner";
 import { AuthContext } from "../../Context/AuthProvider";
+import useToken from "../../Hooks/useToken";
 
 const Login = () => {
   const { signin, resetPassword, loading, setLoading, signInWithGoogle } =
@@ -14,6 +15,12 @@ const Login = () => {
   const from = loaction.state?.from?.pathname || "/";
 
   const [userEmail, setUserEmail] = useState("");
+  const [userLoggedInEmail, setUserLoggedInEmail] = useState("");
+  const [token] = useToken(userLoggedInEmail);
+
+  if (token) {
+    navigate(from, { replace: true });
+  }
 
   //   user login
   const handleLogin = (e) => {
@@ -25,9 +32,8 @@ const Login = () => {
         toast.success("login successfull...!");
 
         // get token
-        setAuthToken(result.user);
-
-        navigate(from, { replace: true });
+        // setAuthToken(result.user);
+        setUserLoggedInEmail(email);
       })
       .catch((err) => {
         toast.error(err.message);
@@ -39,8 +45,9 @@ const Login = () => {
   const handleGoogleLogin = () => {
     signInWithGoogle()
       .then((result) => {
-        setAuthToken(result.user);
-
+        // setAuthToken(result.user);
+        const user = result.user;
+        setUserLoggedInEmail(user?.email);
         navigate(from, { replace: true });
       })
       .catch((err) => {

@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { setAuthToken } from "../../Api/auth";
+
 import PrimaryButton from "../../components/Button/PrimaryButton";
 import SmallSpinner from "../../components/Spinner/SmallSpinner";
 import { AuthContext } from "../../Context/AuthProvider";
+import useToken from "../../Hooks/useToken";
 
 const SignUp = () => {
   const {
@@ -18,7 +19,12 @@ const SignUp = () => {
   const navigate = useNavigate();
   const loaction = useLocation();
   const from = loaction.state?.from?.pathname || "/";
+  const [createdUserEmail, setCreatedUserEmail] = useState("");
+  const [token] = useToken(createdUserEmail);
 
+  if (token) {
+    navigate(from, { replace: true });
+  }
   //   signup system
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -26,6 +32,7 @@ const SignUp = () => {
     const image = e.target.image.files[0];
     const email = e.target.email.value;
     const password = e.target.password.value;
+    const role = e.target.role.value;
 
     // console.log(name, image, email, password);
 
@@ -43,12 +50,13 @@ const SignUp = () => {
         // create user
         createUser(email, password)
           .then((result) => {
-            // get toke
-            setAuthToken(result.user);
+            console.log(result.user);
+            // // get toke
+            // setAuthToken(result.user);
             updateUserProfile(name, data.data.display_url)
               .then(() => {
                 toast.success("user created succesfully");
-                navigate(from, { replace: true });
+                saveUser(name, email, role);
               })
               .catch((err) => {
                 toast.error(err.message);
@@ -68,13 +76,40 @@ const SignUp = () => {
   const handleGoogleLogin = () => {
     signInWithGoogle()
       .then((result) => {
-        setAuthToken(result.user);
+        const user = result.user;
+        saveUser(user?.displayName, user?.email);
         navigate(from, { replace: true });
       })
       .catch((err) => {
         toast.error(err.message);
       });
   };
+  const saveUser = (name, email, role = "user") => {
+    const user = { name, email, role };
+
+    fetch(`${process.env.REACT_APP_API_URL}/users`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setCreatedUserEmail(email);
+      });
+  };
+
+  // const getUserToken = (email) => {
+  //   fetch(`${process.env.REACT_APP_API_URL}/jwt?email=${email}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (data.accessToken) {
+  //         localStorage.setItem("bikevalley-token", data.accessToken);
+  //         navigate(from, { replace: true });
+  //       }
+  //     });
+  // };
   return (
     <div>
       <div className="flex justify-center items-center pt-8">
@@ -144,6 +179,13 @@ const SignUp = () => {
                   placeholder="*******"
                   className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-200 focus:outline-green-500 text-gray-900"
                 />
+                <select
+                  name="role"
+                  className="select select-info w-full px-3 py-2 mt-4"
+                >
+                  <option>user</option>
+                  <option>Seller</option>
+                </select>
               </div>
             </div>
             <div className="space-y-2">

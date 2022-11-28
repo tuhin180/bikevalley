@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Categoriseditem = ({ product }) => {
+const Categoriseditem = ({ product, setBookingProduct }) => {
   console.log(product);
   const {
-    category_name,
     description,
     img,
     location,
@@ -15,6 +14,7 @@ const Categoriseditem = ({ product }) => {
     time_of_post,
     years_of_use,
   } = product;
+
   return (
     <div>
       <div className="max-w-2xl mx-auto">
@@ -58,16 +58,19 @@ const Categoriseditem = ({ product }) => {
                 years_of_use: {years_of_use}
               </span>
             </div>
+            <p className="text-white font-bold">
+              About: <span>{description}</span>
+            </p>
 
-            {/* <Link
-              href="#"
-              className=" w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            <label
+              onClick={() => {
+                setBookingProduct(product);
+              }}
+              htmlFor="Booking-Modal"
+              className="btn text-black mt-4 w-full bg-white rounded-lg py-3 hover:text-white"
             >
               Book Now
-            </Link> */}
-            <button className="mt-4 w-full bg-white rounded-lg py-3">
-              Book Now
-            </button>
+            </label>
           </div>
         </div>
       </div>

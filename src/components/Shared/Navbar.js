@@ -3,9 +3,10 @@ import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthProvider";
 import PrimaryButton from "../Button/PrimaryButton";
-
+import { HiOutlineUserCircle } from "react-icons/hi";
+import SmallSpinner from "../Spinner/SmallSpinner";
 const Navbar = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, loading, logout } = useContext(AuthContext);
   const navItem = (
     <React.Fragment>
       <li>
@@ -59,18 +60,52 @@ const Navbar = () => {
       <div className="navbar-end">
         {user?.uid ? (
           <>
+            <Link to="/dashboard">
+              <PrimaryButton>
+                {loading ? (
+                  <SmallSpinner></SmallSpinner>
+                ) : (
+                  <HiOutlineUserCircle />
+                )}
+              </PrimaryButton>
+            </Link>
             <Link onClick={handleLogOut}>
               <PrimaryButton classes="py-2 px-3 rounded">Log Out</PrimaryButton>
             </Link>
           </>
         ) : (
           <>
-            <Link className="mr-2" to="/login">
-              <PrimaryButton classes="py-2 px-3 rounded">Log in</PrimaryButton>
-            </Link>
+            <div className="dropdown dropdown-bottom">
+              <Link to="/login">
+                <PrimaryButton classes="py-2 px-3 rounded">
+                  Log in
+                </PrimaryButton>
+              </Link>
+            </div>
           </>
         )}
       </div>
+
+      <label
+        htmlFor="dashboard-Drawer"
+        tabIndex={1}
+        className="btn btn-ghost lg:hidden"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M4 6h16M4 12h8m-8 6h16"
+          />
+        </svg>
+      </label>
     </div>
   );
 };

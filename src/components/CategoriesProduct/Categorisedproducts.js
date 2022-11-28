@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
+import BookingModal from "../BookingModal/BookingModal";
 import Categoriseditem from "./Categoriseditem";
 
 const Categorisedproducts = () => {
   const products = useLoaderData();
+
+  const [bookingProduct, setBookingProduct] = useState(null);
 
   return (
     <div className="mt-20">
@@ -13,10 +16,17 @@ const Categorisedproducts = () => {
             <Categoriseditem
               key={product._id}
               product={product}
+              setBookingProduct={setBookingProduct}
             ></Categoriseditem>
           )),
         ]}
       </div>
+      {bookingProduct && (
+        <BookingModal
+          bookingProduct={bookingProduct}
+          setBookingProduct={setBookingProduct}
+        ></BookingModal>
+      )}
     </div>
   );
 };
