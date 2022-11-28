@@ -1,9 +1,12 @@
 import React, { useContext, useState } from "react";
+import toast from "react-hot-toast";
+import { Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../Context/AuthProvider";
 
 const AddProduct = () => {
   const { user } = useContext(AuthContext);
-  const [productImage, setProductImage] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,6 +35,7 @@ const AddProduct = () => {
         const product = {
           name: product_name,
           seller_name: user.displayName,
+          email: user.email,
           resale_price,
           original_price,
           product_condition,
@@ -43,6 +47,20 @@ const AddProduct = () => {
           img: data.data.display_url,
         };
         console.log(product);
+
+        fetch(`${process.env.REACT_APP_API_URL}/bikes`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(product),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            toast.success("product uploaded");
+            navigate("/dashboard/myproduct");
+            form.reset();
+          });
       });
   };
   return (

@@ -4,7 +4,7 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 const CheckOutForm = ({ data }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const { price, byerName, email, _id } = data;
+  const { price, byerName, email, _id, productId } = data;
 
   const [cardError, setCardError] = useState("");
   const [success, setSuccess] = useState("");
@@ -70,6 +70,7 @@ const CheckOutForm = ({ data }) => {
         transactionId: paymentIntent.id,
         email,
         bookingId: _id,
+        productId,
       };
 
       fetch(`${process.env.REACT_APP_API_URL}/payments`, {
