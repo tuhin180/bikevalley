@@ -56,7 +56,7 @@ const routes = createBrowserRouter([
     ),
     children: [
       {
-        path: "/dashboard",
+        path: "/dashboard/myorder",
         element: (
           <UserRoutes>
             <Myorder></Myorder>
@@ -110,6 +110,8 @@ const routes = createBrowserRouter([
             <Payment></Payment>
           </UserRoutes>
         ),
+        loader: ({ params }) =>
+          fetch(`${process.env.REACT_APP_API_URL}/booking/${params.id}`),
       },
     ],
   },

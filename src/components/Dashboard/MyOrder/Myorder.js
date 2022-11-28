@@ -53,7 +53,7 @@ const Myorder = () => {
                 <td>{booking.location}</td>
                 <td>{booking.phone}</td>
                 <td>
-                  <img className="w-15 rounded-full" src={booking.img} alt="" />
+                  <img className="w-16 rounded-full" src={booking.img} alt="" />
                 </td>
                 <td>
                   {!booking.paid && (
