@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
+import AdvertisedItems from "../AdvertisedItem/AdvertisedItems";
 import BookingModal from "../BookingModal/BookingModal";
 import Categoriseditem from "./Categoriseditem";
 

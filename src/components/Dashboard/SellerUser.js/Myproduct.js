@@ -5,9 +5,6 @@ import { AuthContext } from "../../../Context/AuthProvider";
 import Spinner from "../../Spinner/Spinner";
 
 const Myproduct = () => {
-  const available = {};
-  const sold = {};
-
   const { user } = useContext(AuthContext);
   const {
     isLoading,
