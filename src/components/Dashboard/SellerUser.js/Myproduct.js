@@ -3,15 +3,20 @@ import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { AuthContext } from "../../../Context/AuthProvider";
 import ConformationModal from "../../Shared/ConformationModal";
+import EditProduct from "./EditProduct";
 import Spinner from "../../Spinner/Spinner";
 
 const Myproduct = () => {
   const [deletingProduct, setDeletingProduct] = useState(null);
+  const [editProduct, setEditProduct] = useState(null);
 
   const closeModal = () => {
     setDeletingProduct(null);
   };
 
+  const closeEditModal = () => {
+    setEditProduct(null);
+  };
   const { user } = useContext(AuthContext);
 
   const {
@@ -62,6 +67,8 @@ const Myproduct = () => {
         console.log(data);
       });
   };
+
+  const handleEdit = (product) => {};
   return (
     <div>
       <h1 className="text-2xl">MY product </h1>
@@ -75,6 +82,7 @@ const Myproduct = () => {
               <th>image</th>
               <th>price</th>
               <th>activity</th>
+              <th>edit</th>
             </tr>
           </thead>
           <tbody>
@@ -110,6 +118,15 @@ const Myproduct = () => {
                     </>
                   )}
                 </td>
+                <td>
+                  <label
+                    onClick={() => setEditProduct(products)}
+                    htmlFor="editModal"
+                    className="btn btn-xs btn-primary"
+                  >
+                    edit Product
+                  </label>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -123,6 +140,13 @@ const Myproduct = () => {
           successAction={handleDelete}
           modalData={deletingProduct}
         ></ConformationModal>
+      )}
+      {editProduct && (
+        <EditProduct
+          closeEditModal={closeEditModal}
+          successAction={handleEdit}
+          modalData={editProduct}
+        ></EditProduct>
       )}
     </div>
   );
