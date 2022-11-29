@@ -1,15 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { AuthContext } from "../../../Context/AuthProvider";
+import ConformationModal from "../../Shared/ConformationModal";
 import Spinner from "../../Spinner/Spinner";
 
 const Myproduct = () => {
+  const [deletingProduct, setDeletingProduct] = useState(null);
+
+  const closeModal = () => {
+    setDeletingProduct(null);
+  };
+
   const { user } = useContext(AuthContext);
+
   const {
     isLoading,
     error,
     data: myProducts,
+    refetch,
   } = useQuery({
     queryKey: ["myProduct"],
     queryFn: () =>
@@ -35,6 +44,23 @@ const Myproduct = () => {
         toast.success("succesfully advertised");
       })
     );
+  };
+
+  const handleDelete = (product) => {
+    fetch(`${process.env.REACT_APP_API_URL}/bikes/${product._id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: `bearer ${localStorage.getItem("bikevalley-token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.deletedCount > 0) {
+          refetch();
+          toast.success("product deleted succesfully");
+        }
+        console.log(data);
+      });
   };
   return (
     <div>
@@ -74,7 +100,13 @@ const Myproduct = () => {
                   )}
                   {!products.status && (
                     <>
-                      <button className="btn btn-accent btn-xs">delete</button>
+                      <label
+                        onClick={() => setDeletingProduct(products)}
+                        htmlFor="conformationModal"
+                        className="btn btn-accent btn-xs"
+                      >
+                        delete
+                      </label>
                     </>
                   )}
                 </td>
@@ -83,6 +115,15 @@ const Myproduct = () => {
           </tbody>
         </table>
       </div>
+      {deletingProduct && (
+        <ConformationModal
+          title={`are you sure you want to delete`}
+          message={`if you delete ${deletingProduct.name} it will gone for forever`}
+          closeModal={closeModal}
+          successAction={handleDelete}
+          modalData={deletingProduct}
+        ></ConformationModal>
+      )}
     </div>
   );
 };
