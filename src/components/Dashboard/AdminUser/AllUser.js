@@ -5,7 +5,7 @@ import ConformationModal from "../../Shared/ConformationModal";
 import Spinner from "../../Spinner/Spinner";
 
 const AllUser = () => {
-  const [deleteUsesr, setDeleteUser] = useState[null];
+  const [deleteUsesr, setDeleteUser] = useState(null);
 
   const closeModal = () => {
     setDeleteUser(null);
@@ -65,12 +65,13 @@ const AllUser = () => {
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
-                  <button
+                  <label
                     onClick={() => setDeleteUser(user)}
-                    className=" btn btn-xs btn-accent"
+                    htmlFor="conformationModal"
+                    className="btn btn-accent btn-xs"
                   >
                     delete
-                  </button>
+                  </label>
                 </td>
               </tr>
             ))}

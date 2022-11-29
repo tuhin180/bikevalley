@@ -12,8 +12,6 @@ const useUsers = (email) => {
         },
       }).then((res) =>
         res.json().then((data) => {
-          console.log(data);
-          toast.error(data.message);
           setIsUser(data.isUser);
           setIsUserLoading(false);
         })

@@ -14,6 +14,10 @@ import DashboardLayout from "../Layouts/Dashboardlayout";
 import Main from "../Layouts/Main";
 import ErrorPage from "../Pages/EroorPage/ErrorPage";
 import Blog from "../Pages/Home/Blog/Blog";
+import ManageState from "../Pages/Home/Blog/ManageState";
+import Prototypical from "../Pages/Home/Blog/Prototypical";
+import UnitTest from "../Pages/Home/Blog/UnitTest";
+import VS from "../Pages/Home/Blog/VS";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import SignUp from "../Pages/Login/SignUp";
@@ -33,6 +37,11 @@ const routes = createBrowserRouter([
         element: <Home></Home>,
       },
       { path: "/blog", element: <Blog></Blog> },
+      { path: "/blog/state", element: <ManageState></ManageState> },
+      { path: "/blog/prototypical", element: <Prototypical></Prototypical> },
+      { path: "/blog/unittest", element: <UnitTest></UnitTest> },
+      { path: "/blog/vs", element: <VS></VS> },
+
       {
         path: "/category/:id",
         loader: ({ params }) =>

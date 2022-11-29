@@ -69,12 +69,13 @@ const Seller = () => {
                 <td>{seller.email}</td>
                 <td>{seller.role}</td>
                 <td>
-                  <button
+                  <label
                     onClick={() => setDeleteSeller(seller)}
-                    className=" btn btn-xs btn-accent"
+                    htmlFor="conformationModal"
+                    className="btn btn-accent btn-xs"
                   >
                     delete
-                  </button>
+                  </label>
                 </td>
               </tr>
             ))}
